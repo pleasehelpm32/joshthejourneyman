@@ -1,6 +1,6 @@
-// app/page.tsx (updated)
+// app/page.tsx
 import { client, urlFor } from "@/lib/sanity";
-import { PortableText } from "@portabletext/react";
+
 import {
   Card,
   CardContent,
@@ -10,23 +10,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
+import { PortableTextBlock } from "@portabletext/react";
 
-// Updated query: Added summary
+interface Post {
+  title: string;
+  slug: { current: string }; // Slugs have a 'current' property
+  summary?: string; // Optional field
+  description?: PortableTextBlock[]; // For now, keep as any for simplicity or define PortableText types
+  videoUrl?: string; // Optional URL
+  techStack?: string[]; // Array of strings
+  thumbnail?: {
+    // Sanity image type, simplify for now
+    asset: {
+      _ref: string;
+    };
+    // Add other Sanity image properties you might use
+  };
+}
+
+// Updated query (unchanged)
 async function getPosts() {
   const query = `*[_type == "post"] {
     title,
     slug,
-    summary, // New field
+    summary,
     description,
     videoUrl,
     techStack,
@@ -37,48 +48,55 @@ async function getPosts() {
 
 export default async function Home() {
   const posts = await getPosts();
+  const skills = ["TypeScript", "Next.js", "Tailwind", "shadcn/ui"]; // Example; fetch or customize
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Hero/About Section (unchanged) */}
-      <section className="py-12 md:py-24 bg-gradient-to-b from-muted/50 to-background">
+      {/* Hero/About Section (updated with blue gradient and accents) */}
+      <section className="py-12 md:py-24 bg-gradient-to-b from-blue-50 to-background">
         <div className="container mx-auto px-4 text-center">
-          <Avatar className="mx-auto h-24 w-24 mb-4">
+          <Avatar className="mx-auto h-24 w-24 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl">
             <AvatarImage src="/your-avatar.jpg" alt="Your Name" />
-            <AvatarFallback>YN</AvatarFallback>
+            <AvatarFallback className="text-white font-bold text-4xl">
+              YN
+            </AvatarFallback>
           </Avatar>
-          <h1 className="text-4xl font-bold mb-4">Hi, I'm [Your Name]</h1>
-          <p className="text-lg mb-6 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4 text-blue-700">
+            Hi, I am Joshus Singarayer
+          </h1>
+          <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A front-end developer passionate about building interactive web apps
             with TypeScript, Next.js, and more. Check out my projects below!
           </p>
-          <div className="flex justify-center gap-2">
-            <Badge variant="secondary">TypeScript</Badge>
-            <Badge variant="secondary">Next.js</Badge>
-            <Badge variant="secondary">Tailwind</Badge>
-            <Badge variant="secondary">shadcn/ui</Badge>
+          <div className="flex justify-center flex-wrap gap-2">
+            {skills.map((skill) => (
+              <Badge
+                key={skill}
+                className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 transition-colors"
+              >
+                {skill}
+              </Badge>
+            ))}
           </div>
         </div>
       </section>
-      {/* Projects Section  */}
 
+      {/* Projects Section (updated with blue accents and hovers) */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">My Projects</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">
+            My Projects
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post: any) => (
+            {posts.map((post: Post) => (
               <Link
                 key={post.slug.current}
                 href={`/posts/${post.slug.current}`}
-                className="block" // Makes the link block-level for full card coverage
-                aria-label={`Read more about ${post.title}`} // Accessibility
+                className="block"
+                aria-label={`Read more about ${post.title}`}
               >
-                <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow hover:scale-105 cursor-pointer">
-                  {" "}
-                  {/* Hover effects for clickability */}
+                <Card className="overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105 cursor-pointer border-gray-200 group">
                   <CardHeader className="p-0">
-                    {" "}
-                    {/* Thumbnail at top */}
                     {post.thumbnail ? (
                       <Image
                         src={urlFor(post.thumbnail)
@@ -92,32 +110,41 @@ export default async function Home() {
                         className="object-cover w-full aspect-video rounded-t-lg"
                       />
                     ) : (
-                      <div className="bg-muted h-48 flex items-center justify-center rounded-t-lg aspect-video">
-                        <p className="text-muted-foreground text-sm">
+                      <div className="bg-blue-50 h-48 flex items-center justify-center rounded-t-lg aspect-video">
+                        <p className="text-blue-700 text-sm">
                           No thumbnail available
                         </p>
                       </div>
                     )}
                   </CardHeader>
                   <CardContent className="pt-4">
-                    <CardTitle>{post.title}</CardTitle>
+                    <CardTitle className="text-blue-700">
+                      {post.title}
+                    </CardTitle>
                     {post.summary && (
-                      <p className="text-sm text-muted-foreground mt-2 line-clamp-3">
+                      <p className="text-sm text-gray-600 mt-2 line-clamp-3">
                         {post.summary}
                       </p>
                     )}
                     <CardDescription className="flex gap-2 mt-2">
                       {post.techStack?.map((tech: string) => (
-                        <Badge key={tech} variant="outline">
+                        <Badge
+                          key={tech}
+                          variant="outline"
+                          className="text-blue-700 border-blue-200"
+                        >
                           {tech}
                         </Badge>
                       ))}
                     </CardDescription>
                   </CardContent>
                   <CardFooter className="flex justify-center">
-                    {" "}
-                    {/* Centers the button */}
-                    <Button variant="ghost">Read More →</Button>
+                    <Button
+                      variant="ghost"
+                      className="text-blue-700 hover:text-blue-800 hover:bg-blue-50 group-hover:translate-x-1 transition-transform"
+                    >
+                      Read More →
+                    </Button>
                   </CardFooter>
                 </Card>
               </Link>
@@ -125,23 +152,37 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      {/* Contact Section and Footer (unchanged) */}
-      <section className="py-12 bg-muted">
+
+      {/* Contact Section and Footer (updated with blue accents) */}
+      <section className="py-12 bg-blue-50">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
-          <p className="mb-6">
+          <h2 className="text-3xl font-bold mb-6 text-blue-700">
+            Get in Touch
+          </h2>
+          <p className="mb-6 text-gray-600">
             Interested in collaborating or hiring? Reach out!
           </p>
           <div className="flex justify-center gap-4">
-            <Button asChild>
+            <Button
+              className="bg-blue-700 hover:bg-blue-800 text-white"
+              asChild
+            >
               <a href="mailto:your.email@example.com">Email Me</a>
             </Button>
-            <Button variant="outline" asChild>
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              asChild
+            >
               <a href="https://github.com/yourusername" target="_blank">
                 GitHub
               </a>
             </Button>
-            <Button variant="outline" asChild>
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              asChild
+            >
               <a href="https://linkedin.com/in/yourprofile" target="_blank">
                 LinkedIn
               </a>
@@ -149,7 +190,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <footer className="py-4 text-center text-sm text-muted-foreground">
+      <footer className="py-4 text-center text-sm text-gray-600 bg-white border-t border-blue-100">
         © {new Date().getFullYear()} [Your Name]. Built with Next.js and
         Sanity.
       </footer>

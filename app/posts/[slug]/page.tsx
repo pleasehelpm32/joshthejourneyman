@@ -6,28 +6,50 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 
-// Fetch a single post by slug (unchanged)
-async function getPost(slug: string) {
+import React from "react";
+import {
+  PortableTextBlock,
+  PortableTextMarkDefinition,
+} from "@portabletext/types";
+
+interface Post {
+  title: string;
+  slug: { current: string; _type: "slug" };
+  summary?: string;
+  description: PortableTextBlock[];
+  videoUrl?: string;
+  techStack?: string[];
+  thumbnail?: {
+    asset: {
+      _ref: string;
+    };
+    alt?: string;
+  };
+}
+
+// Ensure the return type of getPost is explicitly a Promise that resolves to Post or null
+async function getPost(slug: string): Promise<Post | null> {
   const query = `*[_type == "post" && slug.current == $slug][0] {
     title,
     summary,
     description,
     videoUrl,
     techStack,
-    thumbnail
+    thumbnail,
+    slug // Ensure slug is fetched if needed for other parts of the post object
   }`;
-  return client.fetch(query, { slug });
+  const post: Post | null = await client.fetch(query, { slug });
+  return post;
 }
 
-// Generate static params for all posts (fetches slugs at build time)
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const query = `*[_type == "post"] { "slug": slug.current }`;
-  const posts = await client.fetch(query);
-  return posts.map((post: { slug: string }) => ({ slug: post.slug }));
+  const posts: { slug: string }[] = await client.fetch(query);
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 // Helper function to extract YouTube video ID for clean embed URLs
-const getYouTubeVideoId = (url: string) => {
+const getYouTubeVideoId = (url: string): string | null => {
   const regExp =
     /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
@@ -36,56 +58,68 @@ const getYouTubeVideoId = (url: string) => {
 
 // Define custom Portable Text components with improved spacing
 const portableTextComponents = {
-  // Styles for block types (paragraphs, headings, quotes)
   block: {
-    // Increased bottom margin for headings
-    h1: ({ children }: any) => (
-      <h1 className="text-4xl font-extrabold mb-6 mt-8">{children}</h1>
-    ), // More space above and below
-    h2: ({ children }: any) => (
-      <h2 className="text-3xl font-bold mb-5 mt-7">{children}</h2>
+    h1: ({ children }: { children?: React.ReactNode }) => (
+      <h1 className="text-4xl font-extrabold mb-6 mt-8 text-blue-700">
+        {children}
+      </h1>
     ),
-    h3: ({ children }: any) => (
-      <h3 className="text-2xl font-semibold mb-4 mt-6">{children}</h3>
-    ), // This would be good for "Week 42 Milestones" and "Motivation Corner"
-    h4: ({ children }: any) => (
-      <h4 className="text-xl font-medium mb-3 mt-5">{children}</h4>
+    h2: ({ children }: { children?: React.ReactNode }) => (
+      <h2 className="text-3xl font-bold mb-5 mt-7 text-blue-700">{children}</h2>
     ),
-    // Added margin-bottom to paragraphs
-    normal: ({ children }: any) => (
-      <p className="mb-4 leading-relaxed">{children}</p>
+    h3: ({ children }: { children?: React.ReactNode }) => (
+      <h3 className="text-2xl font-semibold mb-4 mt-6 text-blue-700">
+        {children}
+      </h3>
     ),
-    blockquote: ({ children }: any) => (
-      <blockquote className="border-l-4 border-gray-300 pl-4 py-2 italic my-6">
+    h4: ({ children }: { children?: React.ReactNode }) => (
+      <h4 className="text-xl font-medium mb-3 mt-5 text-blue-700">
+        {children}
+      </h4>
+    ),
+    normal: ({ children }: { children?: React.ReactNode }) => (
+      <p className="mb-4 leading-relaxed text-gray-600">{children}</p>
+    ),
+    blockquote: ({ children }: { children?: React.ReactNode }) => (
+      <blockquote className="border-l-4 border-blue-300 pl-4 py-2 italic my-6 text-gray-600">
         {children}
       </blockquote>
-    ), // More vertical margin
+    ),
   },
-
-  // Components for list items
   list: {
-    // Added margin-bottom and top for lists, and space-y for list items
-    bullet: ({ children }: any) => (
-      <ul className="list-disc pl-5 mb-6 mt-4 space-y-1">{children}</ul>
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <ul className="list-disc pl-5 mb-6 mt-4 space-y-1 text-gray-600">
+        {children}
+      </ul>
     ),
-    number: ({ children }: any) => (
-      <ol className="list-decimal pl-5 mb-6 mt-4 space-y-1">{children}</ol>
+    number: ({ children }: { children?: React.ReactNode }) => (
+      <ol className="list-decimal pl-5 mb-6 mt-4 space-y-1 text-gray-600">
+        {children}
+      </ol>
     ),
   },
-
   listItem: {
-    // mb-1 is fine here, as the space-y on the ul/ol handles the main spacing
-    bullet: ({ children }: any) => <li className="mb-1">{children}</li>,
-    number: ({ children }: any) => <li className="mb-1">{children}</li>,
-  },
-
-  // Components for marks (bold, italic, links)
-  marks: {
-    strong: ({ children }: any) => (
-      <strong className="font-bold">{children}</strong>
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <li className="mb-1">{children}</li>
     ),
-    em: ({ children }: any) => <em className="italic">{children}</em>,
-    link: ({ value, children }: any) => {
+    number: ({ children }: { children?: React.ReactNode }) => (
+      <li className="mb-1">{children}</li>
+    ),
+  },
+  marks: {
+    strong: ({ children }: { children?: React.ReactNode }) => (
+      <strong className="font-bold text-blue-700">{children}</strong>
+    ),
+    em: ({ children }: { children?: React.ReactNode }) => (
+      <em className="italic text-gray-600">{children}</em>
+    ),
+    link: ({
+      value,
+      children,
+    }: {
+      value?: PortableTextMarkDefinition & { href: string };
+      children?: React.ReactNode;
+    }) => {
       const target = (value?.href || "").startsWith("http")
         ? "_blank"
         : undefined;
@@ -94,14 +128,14 @@ const portableTextComponents = {
           href={value?.href}
           target={target}
           rel={target === "_blank" ? "noindex nofollow" : undefined}
-          className="text-blue-600 hover:underline"
+          className="text-blue-700 hover:underline"
         >
           {children}
         </a>
       );
     },
-    code: ({ children }: any) => (
-      <code className="bg-gray-100 p-1 rounded font-mono text-sm">
+    code: ({ children }: { children?: React.ReactNode }) => (
+      <code className="bg-blue-50 p-1 rounded font-mono text-sm text-blue-700">
         {children}
       </code>
     ),
@@ -109,10 +143,11 @@ const portableTextComponents = {
 };
 
 export default async function PostPage({
-  params,
+  params: paramsPromise, // Renamed for clarity
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // FIX: Type params as a Promise
 }) {
+  const params = await paramsPromise; // FIX: Await the params Promise
   const post = await getPost(params.slug);
 
   if (!post) {
@@ -126,10 +161,10 @@ export default async function PostPage({
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-4xl">
-      <Link href="/" className="text-blue-500 hover:underline mb-6 block">
+      <Link href="/" className="text-blue-700 hover:underline mb-6 block">
         &larr; Back to Home
       </Link>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden shadow-lg hover:shadow-blue-500/20 transition-shadow">
         <CardHeader className="flex flex-col items-center text-center">
           {post.thumbnail && (
             <Image
@@ -138,16 +173,21 @@ export default async function PostPage({
                 .height(200)
                 .fit("crop")
                 .url()}
-              alt={post.title}
+              alt={post.thumbnail.alt || post.title} // Use alt from Sanity or fallback
               width={200}
               height={200}
               className="object-cover rounded-lg mb-4"
             />
           )}
-          <CardTitle className="text-3xl text-center">{post.title}</CardTitle>
+          <CardTitle className="text-3xl text-center text-blue-700">
+            {post.title}
+          </CardTitle>
           <div className="flex flex-wrap justify-center gap-2 mt-2">
             {post.techStack?.map((tech: string) => (
-              <Badge key={tech} variant="outline">
+              <Badge
+                key={tech}
+                className="bg-blue-50 text-blue-700 border-blue-200"
+              >
                 {tech}
               </Badge>
             ))}
@@ -167,11 +207,10 @@ export default async function PostPage({
               />
             </div>
           )}
-          <div className="prose lg:prose-xl">
-            {/* FIX: Pass the custom components here */}
+          <div className="prose lg:prose-xl text-gray-600">
             <PortableText
               value={post.description}
-              components={portableTextComponents} // This applies your custom styles!
+              components={portableTextComponents}
             />
           </div>
         </CardContent>
