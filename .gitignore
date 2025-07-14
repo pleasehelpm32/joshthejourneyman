@@ -19,6 +19,7 @@
 
 # production
 /build
+/studio-joshthejourneyman
 
 # misc
 .DS_Store
