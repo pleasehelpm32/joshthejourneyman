@@ -3,9 +3,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { Button } from "@/components/ui/button"; // For nav buttons if desired
-import Link from "next/link";
-
 // Load fonts (unchanged)
 const geistSans = Geist({
   variable: "--font-geist-sans",
