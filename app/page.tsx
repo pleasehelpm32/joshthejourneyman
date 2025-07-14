@@ -62,7 +62,7 @@ export default async function Home() {
             </AvatarFallback>
           </Avatar>
           <h1 className="text-4xl font-bold mb-4 text-blue-700">
-            Hi, I am Joshus Singarayer
+            Hi, I am Joshua Singarayer
           </h1>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A front-end developer passionate about building interactive web apps
