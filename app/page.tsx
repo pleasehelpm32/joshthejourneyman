@@ -56,7 +56,7 @@ export default async function Home() {
       <section className="py-12 md:py-24 bg-gradient-to-b from-blue-50 to-background">
         <div className="container mx-auto px-4 text-center">
           <Avatar className="mx-auto h-24 w-24 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl">
-            <AvatarImage src="/jslogo1.png" alt="Joshua Singarayer" />
+            <AvatarImage src="/jslogo.png" alt="Joshua Singarayer" />
             <AvatarFallback className="text-white font-bold text-4xl">
               YN
             </AvatarFallback>
@@ -153,7 +153,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Contact Section and Footer (updated with blue accents) */}
+      {/* Contact Section and Footer (updated with consistent white buttons and hover effects) */}
       <section className="py-12 bg-blue-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6 text-blue-700">
@@ -164,14 +164,15 @@ export default async function Home() {
           </p>
           <div className="flex justify-center gap-4">
             <Button
-              className="bg-blue-700 hover:bg-blue-800 text-white"
+              variant="outline"
+              className="bg-white text-blue-700 border-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300"
               asChild
             >
               <a href="mailto:joshuasingarayer@gmail.com">Email Me</a>
             </Button>
             <Button
               variant="outline"
-              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              className="bg-white text-blue-700 border-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300"
               asChild
             >
               <a href="https://github.com/pleasehelpm32" target="_blank">
@@ -180,7 +181,7 @@ export default async function Home() {
             </Button>
             <Button
               variant="outline"
-              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              className="bg-white text-blue-700 border-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300"
               asChild
             >
               <a
