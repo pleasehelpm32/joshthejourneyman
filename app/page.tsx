@@ -56,13 +56,13 @@ export default async function Home() {
       <section className="py-12 md:py-24 bg-gradient-to-b from-blue-50 to-background">
         <div className="container mx-auto px-4 text-center">
           <Avatar className="mx-auto h-24 w-24 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl">
-            <AvatarImage src="/your-avatar.jpg" alt="Your Name" />
+            <AvatarImage src="/jslogo1.png" alt="Joshua Singarayer" />
             <AvatarFallback className="text-white font-bold text-4xl">
               YN
             </AvatarFallback>
           </Avatar>
           <h1 className="text-4xl font-bold mb-4 text-blue-700">
-            Hi, I am Joshua Singarayer
+            Hi, I&apos;m Josh
           </h1>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A front-end developer passionate about building interactive web apps
@@ -167,14 +167,14 @@ export default async function Home() {
               className="bg-blue-700 hover:bg-blue-800 text-white"
               asChild
             >
-              <a href="mailto:your.email@example.com">Email Me</a>
+              <a href="mailto:joshuasingarayer@gmail.com">Email Me</a>
             </Button>
             <Button
               variant="outline"
               className="border-blue-200 text-blue-700 hover:bg-blue-50"
               asChild
             >
-              <a href="https://github.com/yourusername" target="_blank">
+              <a href="https://github.com/pleasehelpm32" target="_blank">
                 GitHub
               </a>
             </Button>
@@ -183,7 +183,10 @@ export default async function Home() {
               className="border-blue-200 text-blue-700 hover:bg-blue-50"
               asChild
             >
-              <a href="https://linkedin.com/in/yourprofile" target="_blank">
+              <a
+                href="https://www.linkedin.com/in/joshuasingarayer/"
+                target="_blank"
+              >
                 LinkedIn
               </a>
             </Button>
@@ -191,7 +194,7 @@ export default async function Home() {
         </div>
       </section>
       <footer className="py-4 text-center text-sm text-gray-600 bg-white border-t border-blue-100">
-        © {new Date().getFullYear()} [Your Name]. Built with Next.js and
+        © {new Date().getFullYear()} Joshua Singarayer. Built with Next.js and
         Sanity.
       </footer>
     </div>

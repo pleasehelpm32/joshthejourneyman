@@ -148,6 +148,9 @@ export default async function PostPage({
   params: Promise<{ slug: string }>; // FIX: Type params as a Promise
 }) {
   const params = await paramsPromise; // FIX: Await the params Promise
+  if (params.slug === "favicon.ico") {
+    return null; // Or throw a 404: notFound();
+  }
   const post = await getPost(params.slug);
 
   if (!post) {

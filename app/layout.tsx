@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/favicon.ico", // Add a favicon in /public
+    icon: "/favicon.ico",
   },
 };
 
@@ -50,72 +50,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {" "}
-      {/* suppressHydrationWarning for theme switching */}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`} // Added bg/text classes for theme consistency
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {/* Navigation Bar (simple, with blue accents) */}
-        <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-blue-100">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <Link href="/" className="text-blue-700 font-bold text-xl">
-              [Your Name]
-            </Link>
-            <div className="flex gap-4">
-              <Link
-                href="/"
-                className="text-blue-700 hover:text-blue-800 transition-colors"
-              >
-                Home
-              </Link>
-              <Link
-                href="/contact"
-                className="text-blue-700 hover:text-blue-800 transition-colors"
-              >
-                {" "}
-                {/* Add a /contact page if needed */}
-                Contact
-              </Link>
-              {/* Optional: Add more links, e.g., to GitHub */}
-              <Button
-                variant="outline"
-                className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                asChild
-              >
-                <a href="https://github.com/pleasehelpm32" target="_blank">
-                  GitHub
-                </a>
-              </Button>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main content */}
         <main>{children}</main>
-
-        {/* Footer (simple, with blue accents; matches our previous updates) */}
-        <footer className="py-6 text-center text-sm text-gray-600 bg-blue-50 border-t border-blue-100 mt-auto">
-          <div className="container mx-auto px-4">
-            © {new Date().getFullYear()} [Your Name]. Built with Next.js,
-            Tailwind, shadcn/ui, and Sanity.
-            <div className="mt-2 flex justify-center gap-4">
-              <a
-                href="https://github.com/yourusername"
-                target="_blank"
-                className="text-blue-700 hover:text-blue-800"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/joshuasingarayer/"
-                target="_blank"
-                className="text-blue-700 hover:text-blue-800"
-              >
-                LinkedIn
-              </a>
-            </div>
-          </div>
-        </footer>
       </body>
     </html>
   );
