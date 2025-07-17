@@ -41,11 +41,11 @@ export default async function Home() {
               JS
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
+          <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-2 mb-4">
             <h1 className="text-4xl font-bold text-blue-700">
               Hi, I&apos;m Josh.
             </h1>
-            <TypingEffect /> {/* Placed beside with flex */}
+            <TypingEffect /> {/* Stacks on mobile, inline on md+ */}
           </div>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A developer leveraging AI to build interactive web apps with
