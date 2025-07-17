@@ -1,54 +1,13 @@
 // app/page.tsx
-import { client, urlFor } from "@/lib/sanity";
+import { client } from "@/lib/sanity";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"; // For theme switcher; add via npx shadcn-ui add select
-import Image from "next/image";
-import Link from "next/link";
-import { PortableTextBlock } from "@portabletext/react";
-import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Moon, Sun } from "lucide-react";
-import { FaReact, FaNodeJs } from "react-icons/fa"; // Example icons; adjust as needed
-
-import { useTheme } from "next-themes";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { Suspense } from "react";
-import ThemeSwitcher from "@/components/nonui/ThemeSwitcher";
 import ProjectGrid from "@/components/nonui/ProjectGrid";
-
-interface Post {
-  title: string;
-  slug: { current: string }; // Slugs have a 'current' property
-  summary?: string; // Optional field
-  description?: PortableTextBlock[]; // For now, keep as any for simplicity or define PortableText types
-  videoUrl?: string; // Optional URL
-  techStack?: string[]; // Array of strings
-  thumbnail?: {
-    // Sanity image type, simplify for now
-    asset: {
-      _ref: string;
-    };
-    alt?: string;
-    crop?: { top: number; bottom: number; left: number; right: number };
-    hotspot?: { x: number; y: number; height: number; width: number };
-  };
-}
+import ThemeSwitcher from "@/components/nonui/ThemeSwitcher";
 
 // Updated query (unchanged)
 async function getPosts() {
@@ -69,7 +28,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Hero/About Section (unchanged) */}
+      {/* Hero/About Section */}
       <section className="py-12 md:py-24 bg-gradient-to-b from-blue-100 to-blue-50">
         <div className="container mx-auto px-4 text-center">
           <Avatar className="mx-auto h-24 w-24 md:h-32 md:w-32 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl shadow-blue-500/20">
@@ -82,12 +41,12 @@ export default async function Home() {
             </AvatarFallback>
           </Avatar>
           <h1 className="text-4xl font-bold mb-4 text-blue-700">
-            Hi, I'm Josh
+            Hi, I&apos;m Josh
           </h1>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A developer leveraging AI to build interactive web apps with
             TypeScript, Next.js, React, Tailwind and more. With a background in
-            front-end development, I've built projects ranging from dynamic
+            front-end development, I&apos;ve built projects ranging from dynamic
             portfolios to AI-integrated apps. Passionate about clean code and
             user experience.
           </p>
@@ -106,7 +65,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Contact Section (unchanged) */}
+      {/* Contact Section */}
       <section className="py-12 bg-blue-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6 text-blue-700">
