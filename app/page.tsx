@@ -8,6 +8,7 @@ import { Github, Linkedin, Mail } from "lucide-react";
 import { Suspense } from "react";
 import ProjectGrid from "@/components/nonui/ProjectGrid";
 import ThemeSwitcher from "@/components/nonui/ThemeSwitcher";
+import TypingEffect from "@/components/nonui/TypingEffect";
 
 // Updated query (unchanged)
 async function getPosts() {
@@ -40,9 +41,12 @@ export default async function Home() {
               JS
             </AvatarFallback>
           </Avatar>
-          <h1 className="text-4xl font-bold mb-4 text-blue-700">
-            Hi, I&apos;m Josh
-          </h1>
+          <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
+            <h1 className="text-4xl font-bold text-blue-700">
+              Hi, I&apos;m Josh.
+            </h1>
+            <TypingEffect /> {/* Placed beside with flex */}
+          </div>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
             A developer leveraging AI to build interactive web apps with
             TypeScript, Next.js, React, Tailwind and more. With a background in

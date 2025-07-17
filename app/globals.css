@@ -83,6 +83,15 @@
   --blue-700: oklch(0.7 0.2 210);
 }
 
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
