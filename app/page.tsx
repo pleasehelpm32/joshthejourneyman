@@ -12,9 +12,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // For theme switcher; add via npx shadcn-ui add select
 import Image from "next/image";
 import Link from "next/link";
 import { PortableTextBlock } from "@portabletext/react";
+import { motion } from "framer-motion";
+import { Github, Linkedin, Mail, Moon, Sun } from "lucide-react";
+import { FaReact, FaNodeJs } from "react-icons/fa"; // Example icons; adjust as needed
+
+import { useTheme } from "next-themes";
+import { Suspense } from "react";
+import ThemeSwitcher from "@/components/nonui/ThemeSwitcher";
+import ProjectGrid from "@/components/nonui/ProjectGrid";
 
 interface Post {
   title: string;
@@ -28,7 +44,9 @@ interface Post {
     asset: {
       _ref: string;
     };
-    // Add other Sanity image properties you might use
+    alt?: string;
+    crop?: { top: number; bottom: number; left: number; right: number };
+    hotspot?: { x: number; y: number; height: number; width: number };
   };
 }
 
@@ -48,112 +66,47 @@ async function getPosts() {
 
 export default async function Home() {
   const posts = await getPosts();
-  const skills = ["TypeScript", "Next.js", "Tailwind", "shadcn/ui"]; // Example; fetch or customize
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Hero/About Section (updated with blue gradient and accents) */}
-      <section className="py-12 md:py-24 bg-gradient-to-b from-blue-50 to-background">
+      {/* Hero/About Section (unchanged) */}
+      <section className="py-12 md:py-24 bg-gradient-to-b from-blue-100 to-blue-50">
         <div className="container mx-auto px-4 text-center">
-          <Avatar className="mx-auto h-24 w-24 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl">
-            <AvatarImage src="/jslogo.png" alt="Joshua Singarayer" />
+          <Avatar className="mx-auto h-24 w-24 md:h-32 md:w-32 mb-4 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border-4 border-blue-200 shadow-xl shadow-blue-500/20">
+            <AvatarImage
+              src="/jslogo.png"
+              alt="Joshua Singarayer profile picture"
+            />
             <AvatarFallback className="text-white font-bold text-4xl">
-              YN
+              JS
             </AvatarFallback>
           </Avatar>
           <h1 className="text-4xl font-bold mb-4 text-blue-700">
-            Hi, I&apos;m Josh
+            Hi, I'm Josh
           </h1>
           <p className="text-lg mb-6 max-w-2xl mx-auto text-gray-600">
-            A front-end developer passionate about building interactive web apps
-            with TypeScript, Next.js, and more. Check out my projects below!
+            A developer leveraging AI to build interactive web apps with
+            TypeScript, Next.js, React, Tailwind and more. With a background in
+            front-end development, I've built projects ranging from dynamic
+            portfolios to AI-integrated apps. Passionate about clean code and
+            user experience.
           </p>
-          <div className="flex justify-center flex-wrap gap-2">
-            {skills.map((skill) => (
-              <Badge
-                key={skill}
-                className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 transition-colors"
-              >
-                {skill}
-              </Badge>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* Projects Section (updated with blue accents and hovers) */}
+      {/* Projects Section */}
       <section className="py-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 max-w-7xl">
           <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">
             My Projects
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post: Post) => (
-              <Link
-                key={post.slug.current}
-                href={`/posts/${post.slug.current}`}
-                className="block"
-                aria-label={`Read more about ${post.title}`}
-              >
-                <Card className="overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105 cursor-pointer border-gray-200 group">
-                  <CardHeader className="p-0">
-                    {post.thumbnail ? (
-                      <Image
-                        src={urlFor(post.thumbnail)
-                          .width(400)
-                          .height(225)
-                          .fit("crop")
-                          .url()}
-                        alt={post.title}
-                        width={400}
-                        height={225}
-                        className="object-cover w-full aspect-video rounded-t-lg"
-                      />
-                    ) : (
-                      <div className="bg-blue-50 h-48 flex items-center justify-center rounded-t-lg aspect-video">
-                        <p className="text-blue-700 text-sm">
-                          No thumbnail available
-                        </p>
-                      </div>
-                    )}
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <CardTitle className="text-blue-700">
-                      {post.title}
-                    </CardTitle>
-                    {post.summary && (
-                      <p className="text-sm text-gray-600 mt-2 line-clamp-3">
-                        {post.summary}
-                      </p>
-                    )}
-                    <CardDescription className="flex gap-2 mt-2">
-                      {post.techStack?.map((tech: string) => (
-                        <Badge
-                          key={tech}
-                          variant="outline"
-                          className="text-blue-700 border-blue-200"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </CardDescription>
-                  </CardContent>
-                  <CardFooter className="flex justify-center">
-                    <Button
-                      variant="ghost"
-                      className="text-blue-700 hover:text-blue-800 hover:bg-blue-50 group-hover:translate-x-1 transition-transform"
-                    >
-                      Read More →
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
-          </div>
+          <Suspense fallback={<ProjectsSkeleton />}>
+            <ProjectGrid posts={posts} />
+          </Suspense>
         </div>
       </section>
 
-      {/* Contact Section and Footer (updated with consistent white buttons and hover effects) */}
+      {/* Contact Section (unchanged) */}
       <section className="py-12 bg-blue-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6 text-blue-700">
@@ -168,15 +121,21 @@ export default async function Home() {
               className="bg-white text-blue-700 border-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300"
               asChild
             >
-              <a href="mailto:joshuasingarayer@gmail.com">Email Me</a>
+              <a href="mailto:joshuasingarayer@gmail.com" aria-label="Email me">
+                <Mail className="mr-2 h-4 w-4" /> Email Me
+              </a>
             </Button>
             <Button
               variant="outline"
               className="bg-white text-blue-700 border-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300"
               asChild
             >
-              <a href="https://github.com/pleasehelpm32" target="_blank">
-                GitHub
+              <a
+                href="https://github.com/pleasehelpm32"
+                target="_blank"
+                aria-label="My GitHub"
+              >
+                <Github className="mr-2 h-4 w-4" /> GitHub
               </a>
             </Button>
             <Button
@@ -187,19 +146,35 @@ export default async function Home() {
               <a
                 href="https://www.linkedin.com/in/joshuasingarayer/"
                 target="_blank"
+                aria-label="My LinkedIn"
               >
-                LinkedIn
+                <Linkedin className="mr-2 h-4 w-4" /> LinkedIn
               </a>
             </Button>
           </div>
         </div>
       </section>
       <footer className="py-4 text-center text-sm text-gray-600 bg-white border-t border-blue-100">
-        © {new Date().getFullYear()} Joshua Singarayer. Built with Next.js and
-        Sanity.
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <span>
+            © {new Date().getFullYear()} Joshua Singarayer. Built with Next.js
+            and Sanity.
+          </span>
+          <ThemeSwitcher />
+        </div>
       </footer>
     </div>
   );
 }
 
-export const revalidate = 60;
+function ProjectsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[...Array(3)].map((_, i) => (
+        <Skeleton key={i} className="h-64 w-full rounded-xl" />
+      ))}
+    </div>
+  );
+}
+
+export const revalidate = 300;

@@ -1,15 +1,11 @@
-// app/posts/[slug]/page.tsx
-import { client, urlFor } from "@/lib/sanity";
+"use client";
+
 import { PortableText } from "@portabletext/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import PostContent from "@/components/nonui/PostContent";
-
-import React from "react";
+import { urlFor } from "@/lib/sanity";
 import {
   PortableTextBlock,
   PortableTextMarkDefinition,
@@ -27,57 +23,10 @@ interface Post {
       _ref: string;
     };
     alt?: string;
-    crop?: { top: number; bottom: number; left: number; right: number }; // Enhanced for Sanity image
+    crop?: { top: number; bottom: number; left: number; right: number };
     hotspot?: { x: number; y: number; height: number; width: number };
   };
 }
-
-// Ensure the return type of getPost is explicitly a Promise that resolves to Post or null
-async function getPost(slug: string): Promise<Post | null> {
-  const query = `*[_type == "post" && slug.current == $slug][0] {
-    title,
-    summary,
-    description,
-    videoUrl,
-    techStack,
-    thumbnail,
-    slug // Ensure slug is fetched if needed for other parts of the post object
-  }`;
-  const post: Post | null = await client.fetch(query, { slug });
-  return post;
-}
-
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const query = `*[_type == "post"] { "slug": slug.current }`;
-  const posts: { slug: string }[] = await client.fetch(query);
-  return posts.map((post) => ({ slug: post.slug }));
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getPost(params.slug);
-  if (!post) return { title: "Post Not Found" };
-  return {
-    title: `${post.title} | Josh's Portfolio`,
-    description: post.summary || "A project by Josh Singarayer",
-    openGraph: {
-      title: post.title,
-      description: post.summary,
-      images: post.thumbnail ? [{ url: urlFor(post.thumbnail).url() }] : [],
-    },
-  };
-}
-
-// Helper function to extract YouTube video ID for clean embed URLs
-const getYouTubeVideoId = (url: string): string | null => {
-  const regExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return match && match[2].length === 11 ? match[2] : null;
-};
 
 // Define custom Portable Text components with improved spacing
 const portableTextComponents = {
@@ -164,47 +113,85 @@ const portableTextComponents = {
     ),
   },
 };
-export default async function PostPage({
-  params: paramsPromise,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const params = await paramsPromise;
-  const post = await getPost(params.slug);
 
-  if (!post) {
-    return <div>Post not found</div>;
-  }
+// Helper function to extract YouTube video ID for clean embed URLs
+const getYouTubeVideoId = (url: string): string | null => {
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
+
+export default function PostContent({ post }: { post: Post }) {
+  const youtubeVideoId = post.videoUrl
+    ? getYouTubeVideoId(post.videoUrl)
+    : null;
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-4xl">
-      <nav aria-label="breadcrumb" className="mb-6">
-        <ol className="flex space-x-2 text-sm text-gray-600">
-          <li>
-            <Link href="/" className="text-blue-700 hover:underline">
-              Home
-            </Link>
-          </li>
-          <li>/</li>
-          <li>
-            <Link href="/" className="text-blue-700 hover:underline">
-              Projects
-            </Link>
-          </li>
-          <li>/</li>
-          <li className="text-gray-600">{post.title}</li>
-        </ol>
-      </nav>
-      <Link
-        href="/"
-        className="text-blue-700 hover:underline mb-6 block"
-        aria-label="Back to home"
-      >
-        ← Back to Home
-      </Link>
-      <PostContent post={post} />
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="overflow-hidden shadow-lg hover:shadow-blue-500/20 transition-shadow">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-6">
+          <div className="lg:col-span-2">
+            <CardHeader className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              {post.thumbnail && (
+                <Image
+                  src={urlFor(post.thumbnail)
+                    .width(200)
+                    .height(200)
+                    .fit("crop")
+                    .quality(80)
+                    .url()}
+                  alt={post.thumbnail.alt || `${post.title} thumbnail`}
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                  className="object-cover rounded-xl mb-4"
+                />
+              )}
+              <CardTitle className="text-3xl text-blue-700">
+                {post.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose lg:prose-xl text-gray-600">
+                <PortableText
+                  value={post.description}
+                  components={portableTextComponents}
+                />
+              </div>
+            </CardContent>
+          </div>
+          <div className="lg:col-span-1 p-4 lg:p-0">
+            <div className="flex flex-wrap gap-2 mb-4">
+              {post.techStack?.map((tech: string) => (
+                <Badge
+                  key={tech}
+                  className="bg-blue-50 text-blue-700 border-blue-200"
+                >
+                  {tech}
+                </Badge>
+              ))}
+            </div>
+            {post.videoUrl && youtubeVideoId && (
+              <div className="mb-6 aspect-video w-full shadow-md rounded-xl border border-blue-200">
+                <iframe
+                  src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                  title={`YouTube video player for ${post.title}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                  className="rounded-xl w-full h-full"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    </motion.div>
   );
 }
-
-export const revalidate = 300;

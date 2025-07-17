@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 
 // Load fonts (unchanged)
 const geistSans = Geist({
@@ -16,9 +17,9 @@ const geistMono = Geist_Mono({
 
 // Updated metadata for SEO and social sharing (customize with your details)
 export const metadata: Metadata = {
-  title: "Joshua Singarayer's Portfolio", // E.g., "Josh's Developer Portfolio"
+  title: "Josh's Developer Portfolio",
   description:
-    "Showcasing front-end projects built with TypeScript, Next.js, Tailwind, and more. Available for hire.",
+    "Showcasing projects built with TypeScript, Next.js, Tailwind, and more. Available for hire.",
   openGraph: {
     title: "Joshua Singarayer's Portfolio",
     description:
@@ -50,7 +51,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <main>{children}</main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange // Prevents flash on change
+        >
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

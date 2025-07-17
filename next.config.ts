@@ -1,13 +1,17 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  async rewrites() {
-    return [
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  transpilePackages: ["framer-motion"],
+  images: {
+    remotePatterns: [
       {
-        source: "/favicon.ico",
-        destination: "/_next/static/media/favicon.ico",
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
+        pathname: "/**",
       },
-    ];
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
