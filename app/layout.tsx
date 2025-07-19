@@ -2,7 +2,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
+
+import Navbar from "@/components/nonui/Navbar";
+import Footer from "@/components/nonui/Footer";
 
 // Load fonts (unchanged)
 const geistSans = Geist({
@@ -51,14 +53,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange // Prevents flash on change
-        >
-          <main>{children}</main>
-        </ThemeProvider>
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
