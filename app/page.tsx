@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Github, Linkedin, Mail } from "lucide-react";
 import { Suspense } from "react";
 import ProjectGrid from "@/components/nonui/ProjectGrid";
-import ThemeSwitcher from "@/components/nonui/ThemeSwitcher";
+
 import TypingEffect from "@/components/nonui/TypingEffect";
 
 // Updated query (unchanged)
