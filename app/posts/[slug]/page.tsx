@@ -1,6 +1,6 @@
 // app/posts/[slug]/page.tsx
 import { client, urlFor } from "@/lib/sanity";
-
+import { notFound } from "next/navigation"; // Add this import
 import Link from "next/link";
 
 import React from "react";
@@ -73,7 +73,7 @@ export default async function PostPage({
   const post = await getPost(params.slug);
 
   if (!post) {
-    return <div>Post not found</div>;
+    notFound(); // Use this to trigger 404 instead of custom message
   }
 
   return (
