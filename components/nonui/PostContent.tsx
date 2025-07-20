@@ -3,9 +3,9 @@
 import { PortableText } from "@portabletext/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+
 import { motion } from "framer-motion";
-import { urlFor } from "@/lib/sanity";
+
 import {
   PortableTextBlock,
   PortableTextMarkDefinition,
