@@ -134,24 +134,34 @@ export default function PostContent({ post }: { post: Post }) {
       transition={{ duration: 0.5 }}
     >
       <Card className="overflow-hidden shadow-lg hover:shadow-blue-500/20 transition-shadow">
+        {post.videoUrl && youtubeVideoId && (
+          <div className="flex justify-center mb-6 px-4">
+            <div className="w-full max-w-2xl aspect-video shadow-md rounded-xl border border-blue-200">
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                title={`YouTube video player for ${post.title}`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="rounded-xl w-full h-full"
+              />
+            </div>
+          </div>
+        )}
         <div className="lg:grid lg:grid-cols-3 lg:gap-6">
           <div className="lg:col-span-2">
-            <CardHeader className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              {post.thumbnail && (
-                <Image
-                  src={urlFor(post.thumbnail)
-                    .width(200)
-                    .height(200)
-                    .fit("crop")
-                    .quality(80)
-                    .url()}
-                  alt={post.thumbnail.alt || `${post.title} thumbnail`}
-                  width={200}
-                  height={200}
-                  loading="lazy"
-                  className="object-cover rounded-xl mb-4"
-                />
-              )}
+            <CardHeader className="flex flex-col items-center text-center justify-center lg:items-start lg:text-left">
+              <div className="flex flex-wrap gap-2 mb-4 justify-center ">
+                {post.techStack?.map((tech: string) => (
+                  <Badge
+                    key={tech}
+                    className="bg-blue-50 text-blue-700 border-blue-200"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
               <CardTitle className="text-3xl text-blue-700">
                 {post.title}
               </CardTitle>
@@ -165,31 +175,7 @@ export default function PostContent({ post }: { post: Post }) {
               </div>
             </CardContent>
           </div>
-          <div className="lg:col-span-1 p-4 lg:p-0">
-            <div className="flex flex-wrap gap-2 mb-4">
-              {post.techStack?.map((tech: string) => (
-                <Badge
-                  key={tech}
-                  className="bg-blue-50 text-blue-700 border-blue-200"
-                >
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-            {post.videoUrl && youtubeVideoId && (
-              <div className="mb-6 aspect-video w-full shadow-md rounded-xl border border-blue-200">
-                <iframe
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}`}
-                  title={`YouTube video player for ${post.title}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                  className="rounded-xl w-full h-full"
-                />
-              </div>
-            )}
-          </div>
+          <div className="lg:col-span-1 p-4 lg:p-0">{/* Empty sidebar */}</div>
         </div>
       </Card>
     </motion.div>

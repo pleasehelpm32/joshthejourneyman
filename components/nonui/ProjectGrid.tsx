@@ -34,7 +34,7 @@ interface Post {
 
 export default function ProjectGrid({ posts }: { posts: Post[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
       {posts.map((post: Post, index: number) => (
         <motion.div
           key={post.slug.current}
@@ -47,7 +47,7 @@ export default function ProjectGrid({ posts }: { posts: Post[] }) {
             className="block"
             aria-label={`Read more about ${post.title}`}
           >
-            <Card className="overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105 cursor-pointer border-gray-200 group relative">
+            <Card className="overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105 cursor-pointer border-blue-200 border-2 group relative p-2">
               {index === 0 && (
                 <Badge className="absolute top-2 right-2 bg-blue-700 text-white">
                   Featured
